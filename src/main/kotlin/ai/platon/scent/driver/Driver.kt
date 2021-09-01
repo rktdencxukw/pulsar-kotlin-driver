@@ -8,16 +8,12 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.net.http.HttpTimeoutException
 import java.time.Duration
-import java.time.Instant
 import java.time.OffsetDateTime
-import java.util.*
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
+/**
+ * The driver
+ * */
 class Driver(
     private val server: String,
     private val authToken: String,

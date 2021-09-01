@@ -1,8 +1,10 @@
 package ai.platon.scent.driver
 
-import java.lang.Exception
 import java.time.OffsetDateTime
 
+/**
+ * Pagination
+ * */
 data class Page<T>(
     var number: Int,
     var size: Int,
@@ -14,6 +16,9 @@ data class Page<T>(
     var content: List<T>,
 )
 
+/**
+ * The scrape response
+ * */
 data class ScrapeResponse(
     var id: String? = null,
     var status: String? = null,
@@ -31,6 +36,9 @@ data class ScrapeResponse(
     var timestamp: String? = null,
 )
 
+/**
+ * Compacted scrape response, only important fields are included
+ * */
 data class CompactedScrapeResponse(
     var id: String? = null,
 
@@ -44,14 +52,9 @@ data class CompactedScrapeResponse(
     var collectionId: Int = 0,
 )
 
-data class ExceptionInfo(
-    val timestamp: String?,
-    val status: String? = null,
-    val error: String? = null,
-    val message: String? = null,
-    val path: String? = null,
-)
-
+/**
+ * The scrape summary
+ * */
 data class ScrapeSummary(
     var count: Long = 0,
     var pendingCount: Long = 0,
@@ -62,6 +65,9 @@ data class ScrapeSummary(
     var endTime: OffsetDateTime,
 )
 
+/**
+ * Visit counters
+ * */
 data class VisitCounter(
     var visitsLastMinute: Int = 0,
     var visitsLastTenMinutes: Int = 0,
@@ -74,6 +80,9 @@ data class VisitCounter(
     var maxVisitsPDay: Int = 0,
 )
 
+/**
+ * The user profile
+ * */
 data class UserProfile(
     var balance: Float = 0.0f,
 
@@ -83,6 +92,9 @@ data class UserProfile(
     var address: String? = null,
 )
 
+/**
+ * The user's dashboard
+ * */
 data class Dashboard(
     var authToken: String,
     var timestamp: OffsetDateTime,
@@ -92,6 +104,20 @@ data class Dashboard(
     var hourlySummary: List<ScrapeSummary> = listOf()
 )
 
+/**
+ * The exception information
+ * */
+data class ExceptionInfo(
+    val timestamp: String?,
+    val status: String? = null,
+    val error: String? = null,
+    val message: String? = null,
+    val path: String? = null,
+)
+
+/**
+ * The scrape exception on client side
+ * */
 class ScrapeException(val info: ExceptionInfo): Exception(
     "status: ${info.status}, error: ${info.error}, message: ${info.message}"
 )

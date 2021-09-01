@@ -14,8 +14,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ai.platon.scent</groupId>
-    <artifactId>scent-driver</artifactId>
-    <version>1.6.12</version>
+    <artifactId>scent-kotlin-driver</artifactId>
+    <version>1.6.12-SNAPSHOT</version>
 
     <name>Scent Driver</name>
 
@@ -36,10 +36,25 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/platonai/pulsar.git</connection>
-        <developerConnection>scm:git:https://github.com/platonai/pulsar.git</developerConnection>
-        <url>https://github.com/platonai/pulsar</url>
+        <connection>scm:git:https://github.com/platonai/pulsar-kotlin-driver.git</connection>
+        <developerConnection>scm:git:https://github.com/platonai/pulsar-kotlin-driver.git</developerConnection>
+        <url>https://github.com/platonai/pulsar-kotlin-driver</url>
     </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/platonai/pulsar-kotlin-driver</url>
+    </issueManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
@@ -63,16 +78,6 @@
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
         <defaultGoal>install</defaultGoal>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.7</version>
-                    <extensions>true</extensions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <!--  kotlin  -->
             <plugin>
@@ -86,6 +91,11 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
@@ -95,86 +105,39 @@
                         </goals>
                     </execution>
                 </executions>
-                <!--  Required by spring  -->
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-noarg</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <args>
-                        <arg>-Xjsr305=strict</arg>
-                    </args>
-                    <compilerPlugins>
-                        <plugin>spring</plugin>
-                        <plugin>jpa</plugin>
-                        <plugin>all-open</plugin>
-                    </compilerPlugins>
-                    <pluginOptions>
-                        <option>all-open:annotation=javax.persistence.Entity</option>
-                        <option>all-open:annotation=javax.persistence.Embeddable</option>
-                        <option>all-open:annotation=javax.persistence.MappedSuperclass</option>
-                    </pluginOptions>
-                    <jvmTarget>1.8</jvmTarget>
-                </configuration>
             </plugin>
-            <!--  java  -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <version>${dokka.version}</version>
                 <executions>
-                    <!--  Replacing default-compile as it is treated specially by maven  -->
                     <execution>
-                        <id>default-compile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <!--  Replacing default-testCompile as it is treated specially by maven  -->
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>java-compile</id>
-                        <phase>compile</phase>
+                        <phase>pre-site</phase>
                         <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>java-test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
+                            <goal>dokka</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <verbose>true</verbose>
-                    <fork>true</fork>
-                    <source>${javac.src.version}</source>
-                    <target>${javac.target.version}</target>
-                </configuration>
-            </plugin>
-            <!-- Override parent pom's javadoc settings, skip generating javadoc, use kdoc instead -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
+                    <sourceLinks>
+                        <link>
+                            <path>${project.basedir}</path>
+                            <url>https://github.com/platonai/pulsar-kotlin-driver</url>
+                            <lineSuffix>#L</lineSuffix>
+                        </link>
+                    </sourceLinks>
                 </configuration>
             </plugin>
             <!-- We want to sign the artifact, the POM, and all attached artifacts -->
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
                 <configuration>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
@@ -205,6 +168,7 @@
 
     <properties>
         <kotlin.version>1.4.31</kotlin.version>
+        <dokka.version>1.4.32</dokka.version>
         <javac.src.version>1.8</javac.src.version>
         <javac.target.version>1.8</javac.target.version>
         <gson.version>2.8.6</gson.version>

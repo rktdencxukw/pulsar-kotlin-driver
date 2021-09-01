@@ -9,7 +9,7 @@ fun main() {
     val server = "master"
     val authToken = "b12yCTcfWnw0dFS767eadcea57a6ce4077348b7b3699578"
 
-    val urls = ResourceLoader.readAllLines("asin/asin-urls.txt").shuffled().take(5)
+    val urls = ResourceLoader.readAllLines("asin/asin-urls.txt").shuffled().take(10)
     val sqlTemplate =
         """select
             |   dom_first_text(dom, '#productTitle') as `title`,

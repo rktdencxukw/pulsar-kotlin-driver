@@ -1,5 +1,8 @@
 package ai.platon.scent.driver
 
+/**
+ * The scrape request
+ * */
 data class ScrapeRequest(
     var authToken: String,
     var sql: String,

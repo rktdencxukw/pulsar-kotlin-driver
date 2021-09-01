@@ -3,22 +3,9 @@ package ai.platon.scent.driver
 import ai.platon.scent.driver.ResourceStatus.Series
 
 /**
+ * Enumeration of status codes of resources.
  *
  * COPY FROM spring-web-5.3.4
- *
- * Enumeration of HTTP status codes.
- *
- * The HTTP status code series can be retrieved via [.series].
- *
- * @author Arjen Poutsma
- * @author Sebastien Deleuze
- * @author Brian Clozel
- * @since 3.0
- * @see Series
- *
- * @see [HTTP Status Code Registry](https://www.iana.org/assignments/http-status-codes)
- *
- * @see [List of HTTP status codes - Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
  */
 enum class ResourceStatus(
     private val value: Int,
