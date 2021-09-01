@@ -13,11 +13,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ai.platon.scent</groupId>
-    <artifactId>scent-kotlin-driver</artifactId>
+    <groupId>ai.platon.pulsar</groupId>
+    <artifactId>pulsar-kotlin-driver</artifactId>
     <version>1.6.12-SNAPSHOT</version>
 
-    <name>Scent Driver</name>
+    <name>Pulsar Driver</name>
 
     <licenses>
         <license>

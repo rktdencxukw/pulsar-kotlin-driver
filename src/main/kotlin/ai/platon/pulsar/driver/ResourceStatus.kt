@@ -1,6 +1,6 @@
-package ai.platon.scent.driver
+package ai.platon.pulsar.driver
 
-import ai.platon.scent.driver.ResourceStatus.Series
+import ai.platon.pulsar.driver.ResourceStatus.Series
 
 /**
  * Enumeration of status codes of resources.

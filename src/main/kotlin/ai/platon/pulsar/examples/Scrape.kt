@@ -1,8 +1,8 @@
-package ai.platon.scent.examples
+package ai.platon.pulsar.examples
 
-import ai.platon.scent.driver.Driver
-import ai.platon.scent.driver.utils.SQLTemplate
-import ai.platon.scent.driver.utils.ResourceLoader
+import ai.platon.pulsar.driver.Driver
+import ai.platon.pulsar.driver.utils.SQLTemplate
+import ai.platon.pulsar.driver.utils.ResourceLoader
 import java.nio.file.Files
 
 fun main() {

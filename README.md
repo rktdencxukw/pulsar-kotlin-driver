@@ -1,5 +1,14 @@
 The driver to access the pulsar service.
 
+Add repository setting to your pom file:
+
+    <repositories>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+
 Submit an X-SQL to scrape:
 
     val sql = "..."
@@ -7,7 +16,7 @@ Submit an X-SQL to scrape:
 
 Check the status of a scrape task:
 
-    val status = driver.findById(ids.first())
+    val status = driver.findById(id)
 
 Check our dashboard:
 

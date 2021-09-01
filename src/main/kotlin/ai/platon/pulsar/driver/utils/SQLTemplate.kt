@@ -1,4 +1,4 @@
-package ai.platon.scent.driver.utils
+package ai.platon.pulsar.driver.utils
 
 class SQLTemplate(
     val template: String,
