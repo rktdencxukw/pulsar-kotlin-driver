@@ -9,7 +9,7 @@ fun main() {
     val server = "master"
     val authToken = "b12yCTcfWnw0dFS767eadcea57a6ce4077348b7b3699578"
 
-    val urls = ResourceLoader.readAllLines("asin/asin-urls.txt").shuffled().take(10)
+    val urls = ResourceLoader.readAllLines("sites/amazon/asin/urls.txt").shuffled().take(10)
     val sqlTemplate =
         """select
             |   dom_first_text(dom, '#productTitle') as `title`,
@@ -28,7 +28,7 @@ fun main() {
             val id = driver.submit(sql, asap = true)
             ids.add(id)
         }
-        val path = Files.createTempFile("scent-", ".txt")
+        val path = Files.createTempFile("pulsar-", ".txt")
         Files.write(path, ids)
         println("Ids are written to $path")
 
