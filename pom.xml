@@ -15,7 +15,7 @@
 
     <groupId>ai.platon.pulsar</groupId>
     <artifactId>pulsar-kotlin-driver</artifactId>
-    <version>1.6.13-SNAPSHOT</version>
+    <version>1.6.13</version>
 
     <name>Pulsar Driver</name>
 
@@ -117,29 +117,37 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kdoc-maven-plugin</artifactId>
-                        <version>0.12.1230</version>
-                        <configuration>
-                            <title>API documentation for ${project.artifactId} ${project.version}</title>
-                            <sources>
-                                <source>src/main/kotlin</source>
-                            </sources>
-                        </configuration>
+                        <groupId>org.jetbrains.dokka</groupId>
+                        <artifactId>dokka-maven-plugin</artifactId>
+                        <version>${dokka.version}</version>
                         <executions>
                             <execution>
-                                <id>apidoc</id>
-                                <phase>install</phase>
+                                <!-- generate javadoc.jar before package gpg plugin can generate asc for it -->
+                                <phase>prepare-package</phase>
                                 <goals>
-                                    <goal>apidoc</goal>
+                                    <goal>javadocJar</goal>
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <sourceDirectories>
+                                <dir>${project.basedir}/src/main/java</dir>
+                                <dir>${project.basedir}/src/main/kotlin</dir>
+                            </sourceDirectories>
+                        </configuration>
                     </plugin>
                     <!-- Override parent pom's javadoc settings, skip generating javadoc, use kdoc instead -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <!-- Skip maven-deploy-plugin to use nexus-staging-maven-plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
                         <configuration>
                             <skip>true</skip>
                         </configuration>
