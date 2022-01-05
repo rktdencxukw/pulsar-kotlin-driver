@@ -15,7 +15,7 @@
 
     <groupId>ai.platon.pulsar</groupId>
     <artifactId>pulsar-kotlin-driver</artifactId>
-    <version>1.6.12-SNAPSHOT</version>
+    <version>1.6.13-SNAPSHOT</version>
 
     <name>Pulsar Driver</name>
 
