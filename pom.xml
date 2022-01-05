@@ -106,46 +106,58 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.jetbrains.dokka</groupId>
-                <artifactId>dokka-maven-plugin</artifactId>
-                <version>${dokka.version}</version>
-                <executions>
-                    <execution>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>dokka</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <sourceLinks>
-                        <link>
-                            <path>${project.basedir}</path>
-                            <url>https://github.com/platonai/pulsar-kotlin-driver</url>
-                            <lineSuffix>#L</lineSuffix>
-                        </link>
-                    </sourceLinks>
-                </configuration>
-            </plugin>
-            <!-- We want to sign the artifact, the POM, and all attached artifacts -->
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+
+        <profile>
+            <id>platon-release</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kdoc-maven-plugin</artifactId>
+                        <version>0.12.1230</version>
+                        <configuration>
+                            <title>API documentation for ${project.artifactId} ${project.version}</title>
+                            <sources>
+                                <source>src/main/kotlin</source>
+                            </sources>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>apidoc</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>apidoc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Override parent pom's javadoc settings, skip generating javadoc, use kdoc instead -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <!-- We want to sign the artifact, the POM, and all attached artifacts -->
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>

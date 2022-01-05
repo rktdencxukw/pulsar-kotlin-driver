@@ -494,7 +494,7 @@ enum class ResourceStatus(
      *
      * This is a shortcut for checking the value of [.series].
      * @since 4.0
-     * @see .series
+     * @see [series]
      */
     fun is5xxServerError(): Boolean {
         return series() == Series.SERVER_ERROR
@@ -505,8 +505,8 @@ enum class ResourceStatus(
      *
      * This is a shortcut for checking the value of [.series].
      * @since 5.0
-     * @see .is4xxClientError
-     * @see .is5xxServerError
+     * @see [is4xxClientError]
+     * @see [is5xxServerError]
      */
     val isError: Boolean
         get() = is4xxClientError() || is5xxServerError()
