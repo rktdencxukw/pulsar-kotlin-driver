@@ -11,10 +11,18 @@ data class Page<T>(
     var totalPages: Int,
     var totalElements: Long,
     var numberOfElements: Int,
-    var first: Boolean,
-    var last: Boolean,
     var content: List<T>,
-)
+) {
+    val offset get() = number * size
+    val pageSize get() = size
+    val pageNumber get() = number
+    val hasPrevious get() = number > 0
+    val hasNext get() = number + 1 < totalPages
+    val isFirst get() = !hasPrevious
+    val isLast get() = !hasNext
+    val isEmpty get() = numberOfElements == 0
+    val isNotEmpty get() = !isEmpty
+}
 
 /**
  * The scrape response

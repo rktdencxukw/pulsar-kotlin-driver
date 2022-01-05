@@ -6,7 +6,7 @@ import ai.platon.pulsar.driver.utils.ResourceLoader
 import java.nio.file.Files
 
 fun main() {
-    val server = "master"
+    val server = "localhost"
     val authToken = "b12yCTcfWnw0dFS767eadcea57a6ce4077348b7b3699578"
 
     val urls = ResourceLoader.readAllLines("sites/amazon/asin/urls.txt").shuffled().take(10)

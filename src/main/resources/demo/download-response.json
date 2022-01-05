@@ -1,0 +1,532 @@
+{
+  "content": [
+    {
+      "id": "619b68547049e27683cc0d6e",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 328953,
+      "isDone": true,
+      "url": "https://item.jd.com/100010135109.html",
+      "resultSet": [
+        {
+          "title": "3M KN95口罩9501+ 防雾霾PM2.5 防飞沫 舒适针织带 耳戴式 【50只】",
+          "productname": "3M9501",
+          "productnameraw": "商品名称：3M9501",
+          "brand": "3M",
+          "model": "3M9501",
+          "specification": "9501+ 耳戴 非独立50只京仓发货",
+          "price": "0.0",
+          "pricetext": "",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "200",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "3M安全与工业品京东自营官方旗舰店",
+          "supplierurl": "https://mall.jd.com/index-1000341601.html",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "0.0",
+          "commentcounttext": "0",
+          "coupon": "",
+          "couponcomment": "",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "",
+          "services": "",
+          "variants": "(9501+ 电商款2片/包20片装 厂直, 9501+ 耳戴 非独立50只京仓发货, 9502+ 头戴 非独立50只京仓发货, 9501V+ 耳戴独立 15只 京仓发货, 9501V+ 耳戴独立 15只 厂家发货, 9502V+头戴独立15只 京仓发货, 9502V+ 头戴独立 15只 厂家发货, 9501V+ 耳戴环保非独立装25只, 9502V+ 头戴环保非独立装 25只, 9501+双片装 1盒（50只）, 9502+双片装 1盒（50只）, 9501+耳带环保装非独立包装50只, 9502+ 头戴环保装非独立包装50只)",
+          "baseuri": "https://i-item.jd.com/100010135109.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b68517049e27683cc0d6d",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 311784,
+      "isDone": true,
+      "url": "https://search.jd.com/Search?keyword=3M+9501%2B&enc=utf-8&wq=3M+9501%2B&qrst=1&psort=3",
+      "resultSet": [
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/100010135109.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/100012933469.html"
+        },
+        {
+          "pricetext": "￥85.00",
+          "price": "85.0",
+          "href": "https://item.jd.com/4954677.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/5725011.html"
+        },
+        {
+          "pricetext": "￥85.00",
+          "price": "85.0",
+          "href": "https://item.jd.com/100008925295.html"
+        },
+        {
+          "pricetext": "￥79.00",
+          "price": "79.0",
+          "href": "https://item.jd.com/100020553232.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/100008326133.html"
+        },
+        {
+          "pricetext": "￥133.00",
+          "price": "133.0",
+          "href": "https://item.jd.com/100015730158.html"
+        },
+        {
+          "pricetext": "￥85.00",
+          "price": "85.0",
+          "href": "https://item.jd.com/100009544115.html"
+        },
+        {
+          "pricetext": "￥85.00",
+          "price": "85.0",
+          "href": "https://item.jd.com/5921142.html"
+        },
+        {
+          "pricetext": "￥156.00",
+          "price": "156.0",
+          "href": "https://item.jd.com/10021438067072.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/100015415850.html"
+        },
+        {
+          "pricetext": "￥100.00",
+          "price": "100.0",
+          "href": "https://item.jd.com/11221140015.html"
+        },
+        {
+          "pricetext": "￥125.00",
+          "price": "125.0",
+          "href": "https://item.jd.com/100024446806.html"
+        },
+        {
+          "pricetext": "￥79.00",
+          "price": "79.0",
+          "href": "https://item.jd.com/100020173744.html"
+        },
+        {
+          "pricetext": "￥106.00",
+          "price": "106.0",
+          "href": "https://item.jd.com/51137726179.html"
+        },
+        {
+          "pricetext": "￥85.00",
+          "price": "85.0",
+          "href": "https://item.jd.com/100015714196.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/100022201200.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/10021086543825.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/100007519275.html"
+        },
+        {
+          "pricetext": "￥79.00",
+          "price": "79.0",
+          "href": "https://item.jd.com/100020051372.html"
+        },
+        {
+          "pricetext": "￥88.00",
+          "price": "88.0",
+          "href": "https://item.jd.com/16680281837.html"
+        },
+        {
+          "pricetext": "￥133.00",
+          "price": "133.0",
+          "href": "https://item.jd.com/100013140179.html"
+        },
+        {
+          "pricetext": "￥89.00",
+          "price": "89.0",
+          "href": "https://item.jd.com/100009700529.html"
+        },
+        {
+          "pricetext": "￥138.00",
+          "price": "138.0",
+          "href": "https://item.jd.com/100019440848.html"
+        },
+        {
+          "pricetext": "￥153.00",
+          "price": "153.0",
+          "href": "https://item.jd.com/100014914636.html"
+        },
+        {
+          "pricetext": "￥159.00",
+          "price": "159.0",
+          "href": "https://item.jd.com/100009559283.html"
+        },
+        {
+          "pricetext": "￥169.00",
+          "price": "169.0",
+          "href": "https://item.jd.com/100022871916.html"
+        },
+        {
+          "pricetext": "￥133.00",
+          "price": "133.0",
+          "href": "https://item.jd.com/100008427711.html"
+        },
+        {
+          "pricetext": "￥165.00",
+          "price": "165.0",
+          "href": "https://item.jd.com/10021029913861.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66687049e27683cc0d6c",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 544408,
+      "isDone": true,
+      "url": "https://item.jd.com/10021029913861.html",
+      "resultSet": [
+        {
+          "title": "3m口罩防风防尘防飞沫工业粉尘PM2.5防花粉KN95口罩男女通用成人保暖立体款 3M9501+【针织耳带，不带阀，50只环保装】",
+          "productname": "3m口罩防风防尘防飞沫工业粉尘PM2.5防花粉KN95口罩男女通用成人保暖立体款 3M9501+【针织耳带，不带阀，50只环保装】",
+          "productnameraw": "商品名称：3m口罩防风防尘防飞沫工业粉尘PM2.5防花粉KN95口罩男女通用成人保暖立体款 3M9501+【针织耳带，不带阀，50只环保装】",
+          "brand": "3M",
+          "model": "3m口罩防风防尘防飞沫工业粉尘PM2.5防花粉KN95口罩男女通用成人保暖立体款 3M9501+【针织耳带，不带阀，50只环保装】",
+          "specification": "3M9501+【针织耳带，不带阀，50只环保装】",
+          "price": "165.0",
+          "pricetext": "165.00",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "200",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "3M防护旗舰店",
+          "supplierurl": "https://3mppe.jd.com",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "5.0",
+          "commentcounttext": "5万+",
+          "coupon": "满399减20",
+          "couponcomment": "仅可购买3M防护旗舰店商品 有效期2021-11-19至2021-11-30",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "3M防护旗舰店",
+          "services": "免费上门取退|极速审核|退换货运费险",
+          "variants": "(3M9502+双片装【25个独立包装 50只/盒】, 3M9502V+【针织头戴】【带呼吸阀，25/盒】, 3M9501+【针织耳带，不带阀，50只环保装】, 3M9502V+【针织头带，带阀，15只独立装】, 9541V带呼吸阀针织耳带KN95级【一盒15只】, 3M9501v+【共150只/10盒】, 3M9502+【针织头戴，不带阀，50只环保装】, 3M9501v+【共30只/2盒送防勒神器】, 3M9501V+【有阀，15只/盒送防勒调节器】, 3M9501+双片装【共50只不带阀，送防勒带 】, 3M9502+盒装【N95针织头戴50只非独立装】, 3M9501v+【共45只/3盒送防勒神器】, 9542V带呼吸阀针织头戴KN95级【一盒20只】, 620E有机蒸汽滤毒盒套装)",
+          "baseuri": "https://item.jd.com/10021029913861.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66687049e27683cc0d6b",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 363288,
+      "isDone": true,
+      "url": "https://item.jd.com/100008427711.html",
+      "resultSet": [
+        {
+          "title": "3M防尘口罩9501V+25只装KN95 工业粉尘 防灰尘 防雾霾 装修 防颗粒物 呼吸阀耳挂折叠式 环保袋装",
+          "productname": "3M9551",
+          "productnameraw": "商品名称：3M9551",
+          "brand": "3M",
+          "model": "3M9551",
+          "specification": "9501V+ 25只 耳带式 袋装",
+          "price": "133.0",
+          "pricetext": "133.00",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "999",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "3M安全与工业品京东自营官方旗舰店",
+          "supplierurl": "https://mall.jd.com/index-1000341601.html",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "0.0",
+          "commentcounttext": "0",
+          "coupon": "满99减20",
+          "couponcomment": "仅可购买工业品部分商品 有效期2021-11-01至2021-11-30",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "",
+          "services": "",
+          "variants": "(9501+电商款（20只/盒） 耳带式, 9501+ 双片盒装（50只） 耳带式, 9501+ 双片盒装（50只）京东快递, 9502+ 双片盒装（50只） 头带式, 9501+50只袋装-京仓 耳带式, 9501+ 50只 耳带式, 9502+ 50只 头戴式, 9501V+15只独立装-京仓 耳带式, 9501V+15只独立装 耳带式, 9501V+ 25只 耳带式 袋装, 9502V+15只独立装 头戴式, 9502V+ 25只 头戴式 袋装, 9501V+ 25只独立装 盒装, 9502V+ 25只独立装 盒装)",
+          "baseuri": "https://i-item.jd.com/100008427711.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66677049e27683cc0d6a",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 280707,
+      "isDone": true,
+      "url": "https://item.jd.com/100022871916.html",
+      "resultSet": [
+        {
+          "title": "3M 口罩 防雾霾PM2.5 防飞沫KN95口罩 9501+ 舒适针织带 耳戴式 【50只】",
+          "productname": "3M9502",
+          "productnameraw": "商品名称：3M9502",
+          "brand": "3M",
+          "model": "3M9502",
+          "specification": "9501+ 环保 50只",
+          "price": "0.0",
+          "pricetext": "",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "200",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "3M工业防护京东自营官方旗舰店",
+          "supplierurl": "https://3m-mro.jd.com",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "0.0",
+          "commentcounttext": "0",
+          "coupon": "",
+          "couponcomment": "",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "",
+          "services": "",
+          "variants": "(9501+ 环保 50只, 9502+环保 50只, 9501V+ 环保 25只, 9502V+ 环保 25只, 9541 工业 25只, 9542 工业 25只, 9541V 工业 20只, 9542V 工业 20只, 9501V+网络 15只, 9502V+网络 15只, 9541V 网络 15只, 9542V 网络 15只, 9501+ 网络 20只, 9502+ N95款 50只, 9501V+ 25只独立装, 9502V+ 25只独立装, 9501+双片装 1盒（50只）, 9502+双片装 1盒（50只）, 9541口罩25个装, 9501V+15只独立装, 9502V+25只独立盒装, 9541V)",
+          "baseuri": "https://i-item.jd.com/100022871916.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66677049e27683cc0d69",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 225529,
+      "isDone": true,
+      "url": "https://item.jd.com/100009559283.html",
+      "resultSet": [
+        {
+          "title": "3M 口罩9501+防尘防雾霾防护口罩耳带式针织带不带呼吸阀 KN95级别 带防伪贴环保装 50个/袋",
+          "productname": "3M9501V+",
+          "productnameraw": "商品名称：3M9501V+",
+          "brand": "3M",
+          "model": "3M9501V+",
+          "specification": "9501+耳带式KN95环保装 50个/袋",
+          "price": "0.0",
+          "pricetext": "",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "200",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "3M个人防护用品京东自营专区",
+          "supplierurl": "https://mall.jd.com/index-1000351321.html",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "0.0",
+          "commentcounttext": "0",
+          "coupon": "",
+          "couponcomment": "",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "",
+          "services": "",
+          "variants": "(9501V+ KN95耳带式25个/袋, 3M 9132头戴式医用口罩, 9501+耳带式KN95环保装 50个/袋, 9502+头带式KN95贴环保装 50个, 9541活性炭KN95独立装25只/盒, 9542活性炭KN95独立包装 25只/盒, 9502V+ KN95头带式带阀 25个/袋, 9542v活性炭KN95独立装 20个/盒, 9501V+ KN95带阀舒适独立装15只, 9002 KN90头戴式环保装 50只/袋)",
+          "baseuri": "https://i-item.jd.com/100009559283.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66677049e27683cc0d68",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 29003,
+      "isDone": true,
+      "url": "https://item.jd.com/100014914636.html",
+      "resultSet": [
+        {
+          "title": "",
+          "productname": "",
+          "productnameraw": "",
+          "brand": "",
+          "model": "",
+          "specification": "",
+          "price": "0.0",
+          "pricetext": "",
+          "minnumbertobuy": "",
+          "maxnumbertobuy": "",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "",
+          "supplierurl": "",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "0.0",
+          "commentcounttext": "",
+          "coupon": "",
+          "couponcomment": "",
+          "promotion": "",
+          "deliveryby": "",
+          "services": "",
+          "variants": "()",
+          "baseuri": "https://passport.jd.com/new/login.aspx?ReturnUrl=http%3A%2F%2Fitem.jd.com%2F100014914636.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66677049e27683cc0d67",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 342650,
+      "isDone": true,
+      "url": "https://item.jd.com/100019440848.html",
+      "resultSet": [
+        {
+          "title": "3M n95口罩KN95级9501V+带呼吸阀活性炭防雾霾PM2.5 工业粉尘防尘防护口罩男女*25只/袋（环保）",
+          "productname": "3M3M kn95级口罩9501+ 9502+防雾霾PM2.5 工业粉尘防尘口罩 非一次性男女儿童",
+          "productnameraw": "商品名称：3M3M kn95级口罩9501+ 9502+防雾霾PM2.5 工业粉尘防尘口罩 非一次性男女儿童",
+          "brand": "3M",
+          "model": "3M3M kn95级口罩9501+ 9502+防雾霾PM2.5 工业粉尘防尘口罩 非一次性男女儿童",
+          "specification": "3mkn95级9501V+耳带*25只/袋",
+          "price": "138.0",
+          "pricetext": "138.00",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "200",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "个人防护京东自营专区",
+          "supplierurl": "https://xinminghui.jd.com",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "5000.0",
+          "commentcounttext": "5000+",
+          "coupon": "满99减20",
+          "couponcomment": "仅可购买工业品部分商品 有效期2021-11-01至2021-11-30",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "",
+          "services": "",
+          "variants": "(3mkn95级9501+耳带/10只独立装, 3mkn95级9501V+耳带/10只独立装, 3mkn95级9501V+耳带*25只/袋, 3mkn95级9502V+头带*25只/袋, 黑色活性炭3只装, 黑色活性炭3包装(9只装), 3m9501V+25只/耳戴独立装, 3M9132N95口罩头戴式独立装30只, 3mkn95级9502+头戴50只环保装, 3mkn95级9501+耳带50只环保装)",
+          "baseuri": "https://i-item.jd.com/100019440848.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66677049e27683cc0d66",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 335387,
+      "isDone": true,
+      "url": "https://item.jd.com/100009700529.html",
+      "resultSet": [
+        {
+          "title": "3M 口罩 防花粉飞沫KN95防粉尘防细小颗粒物口罩 9501V+ 15只/盒 棉质耳带 独立包装 定做",
+          "productname": "3m9501V+口罩（网络版）",
+          "productnameraw": "商品名称：3m9501V+口罩（网络版）",
+          "brand": "3m",
+          "model": "3m9501V+口罩（网络版）",
+          "specification": "9501V+ 耳带 1盒",
+          "price": "0.0",
+          "pricetext": "",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "200",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "3m工业品京东自营专区",
+          "supplierurl": "https://mall.jd.com/index-1000344623.html",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "1000.0",
+          "commentcounttext": "1000+",
+          "coupon": "",
+          "couponcomment": "",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "",
+          "services": "",
+          "variants": "(9502V+ 头带 1盒15个, 9501V+ 耳带 1盒, 9501V+ 耳带 2盒, 9501V+ 耳带 3盒, 9501V+ 耳带 4盒, 9501V+ 耳带 10盒)",
+          "baseuri": "https://i-item.jd.com/100009700529.html"
+        }
+      ],
+      "collectionId": 0
+    },
+    {
+      "id": "619b66677049e27683cc0d65",
+      "statusCode": 200,
+      "pageStatusCode": 200,
+      "pageContentBytes": 337408,
+      "isDone": true,
+      "url": "https://item.jd.com/100013140179.html",
+      "resultSet": [
+        {
+          "title": "3M口罩 9501V+ 耳戴式KN95口罩防粉尘飞沫雾霾颗粒物PM2.5带呼吸阀盒装口罩 25只独立盒装",
+          "productname": "3M9551",
+          "productnameraw": "商品名称：3M9551",
+          "brand": "3M",
+          "model": "3M9551",
+          "specification": "9501V+ 25只独立装 盒装",
+          "price": "0.0",
+          "pricetext": "",
+          "minnumbertobuy": "1",
+          "maxnumbertobuy": "200",
+          "salesvolume": -1,
+          "shopscore": -1,
+          "supplier": "3M安全与工业品京东自营官方旗舰店",
+          "supplierurl": "https://mall.jd.com/index-1000341601.html",
+          "deliveryfrom": "unknown",
+          "suppliertel": "unknown",
+          "commentcount": "0.0",
+          "commentcounttext": "0",
+          "coupon": "",
+          "couponcomment": "",
+          "promotion": "促　　销 展开促销",
+          "deliveryby": "",
+          "services": "",
+          "variants": "(9501+电商款（20只/盒） 耳带式, 9501+ 双片盒装（50只） 耳带式, 9501+ 双片盒装（50只）京东快递, 9502+ 双片盒装（50只） 头带式, 9501+50只袋装-京仓 耳带式, 9501+ 50只 耳带式, 9502+ 50只 头戴式, 9501V+15只独立装-京仓 耳带式, 9501V+15只独立装 耳带式, 9501V+ 25只 耳带式 袋装, 9502V+15只独立装 头戴式, 9502V+ 25只 头戴式 袋装, 9501V+ 25只独立装 盒装, 9502V+ 25只独立装 盒装)",
+          "baseuri": "https://i-item.jd.com/100013140179.html"
+        }
+      ],
+      "collectionId": 0
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "offset": 232150,
+    "pageNumber": 23215,
+    "pageSize": 10,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": false,
+  "totalElements": 232245,
+  "totalPages": 23225,
+  "number": 23215,
+  "sort": {
+    "sorted": true,
+    "unsorted": false,
+    "empty": false
+  },
+  "size": 10,
+  "first": false,
+  "numberOfElements": 10,
+  "empty": false
+}
