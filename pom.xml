@@ -15,10 +15,17 @@
 
     <groupId>ai.platon.pulsar</groupId>
     <artifactId>pulsar-kotlin-driver</artifactId>
-    <version>1.6.13</version>
+    <version>1.6.13-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
 
     <name>Pulsar Driver</name>
+    <description>
+        The driver for pulsar big data engine
+    </description>
 
+    <url>http://platon.ai</url>
+    <inceptionYear>2020</inceptionYear>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -119,7 +126,14 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.jetbrains.dokka</groupId>
@@ -147,6 +161,54 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <!--                            <configuration>-->
+                                <!--                                <keyname>${gpg.keyname}</keyname>-->
+                                <!--                                <passphraseServerId>${gpg.keyname}</passphraseServerId>-->
+                                <!--                            </configuration>-->
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- calculate checksums of source release for Apache dist area -->
+                    <plugin>
+                        <groupId>net.nicoulaj.maven.plugins</groupId>
+                        <artifactId>checksum-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>source-release-checksum</id>
+                                <goals>
+                                    <goal>files</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <algorithms>
+                                <algorithm>SHA-512</algorithm>
+                            </algorithms>
+                            <csvSummary>false</csvSummary>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>${project.artifactId}-${project.version}-source-release.zip</include>
+                                        <include>${project.artifactId}-${project.version}-source-release.tar*</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <failIfNoFiles>false</failIfNoFiles><!-- usually, no file to do checksum: don't consider error -->
                         </configuration>
                     </plugin>
                     <!-- Skip maven-deploy-plugin to use nexus-staging-maven-plugin -->
