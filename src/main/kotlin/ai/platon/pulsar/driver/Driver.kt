@@ -5,34 +5,54 @@ import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.lang.reflect.Type
 import java.net.URI
-import java.net.URLEncoder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.nio.charset.Charset
 import java.time.Duration
 import java.time.OffsetDateTime
+
+class DriverSettings(
+    val server: String,
+    val authToken: String,
+    val port: Int = 8182,
+    val contextPath: String = "/api",
+    val httpTimeout: Duration = Duration.ofMinutes(1),
+)
 
 /**
  * The pulsar driver
  * */
-class Driver(
+open class Driver(
     private val server: String,
     private val authToken: String,
+    private val port: Int = 8182,
+    private val contextPath: String = "/api",
     private val httpTimeout: Duration = Duration.ofMinutes(3),
 ) : AutoCloseable {
-    var timeout = Duration.ofSeconds(120)
-    private val scrapeBaseUri = "http://$server:8182/api/x/a"
-    private val scrapeApi = "$scrapeBaseUri/q"
-    private val statusApi = "$scrapeBaseUri/status"
-    private val statusesApi = "$scrapeBaseUri/statuses"
 
-    private val userBaseUri = "http://$server:8182/api/users/$authToken"
-    private val dashboardApi = "$userBaseUri/dashboard"
-    private val countApi = "$userBaseUri/count"
-    private val fetchApi = "$userBaseUri/fetch"
-    private val downloadApi = "$userBaseUri/download"
-    private val statusQueryApi = "$scrapeBaseUri/status/q"
+    constructor(settings: DriverSettings): this(
+        settings.server,
+        settings.authToken,
+        settings.port,
+        settings.contextPath,
+        settings.httpTimeout,
+    )
+
+    var timeout = Duration.ofSeconds(120)
+
+    private val contextPath0 = contextPath.removePrefix("/")
+    private val contextBase = "http://$server:$port/$contextPath0"
+    val scrapeBaseUri = "$contextBase/x/a"
+    val scrapeApi = "$scrapeBaseUri/q"
+    val statusApi = "$scrapeBaseUri/status"
+    val statusesApi = "$scrapeBaseUri/statuses"
+
+    val userBaseUri = "$contextBase/users/$authToken"
+    val dashboardApi = "$userBaseUri/dashboard"
+    val countApi = "$userBaseUri/count"
+    val fetchApi = "$userBaseUri/fetch"
+    val downloadApi = "$userBaseUri/download"
+    val statusQueryApi = "$scrapeBaseUri/status/q"
 
     private val httpClient = HttpClient.newHttpClient()
 
@@ -164,12 +184,12 @@ class Driver(
         if (response.statusCode() != 200) {
             /**
              * {
-                "timestamp" : "2021-08-28T17:12:33.567+00:00",
-                "status" : 401,
-                "error" : "Unauthorized",
-                "message" : "",
-                "path" : "/api/x/a/q"
-                }
+            "timestamp" : "2021-08-28T17:12:33.567+00:00",
+            "status" : 401,
+            "error" : "Unauthorized",
+            "message" : "",
+            "path" : "/api/x/a/q"
+            }
              * */
             // println(response.body())
             val info = createGson().fromJson(body, ExceptionInfo::class.java)

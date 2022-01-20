@@ -1,7 +1,5 @@
 package ai.platon.pulsar.driver
 
-import ai.platon.pulsar.driver.ResourceStatus.Series
-
 /**
  * Enumeration of status codes of resources.
  *
@@ -515,7 +513,7 @@ enum class ResourceStatus(
      * Return a string representation of this status code.
      */
     override fun toString(): String {
-        return value.toString() + " " + name
+        return "$value $name"
     }
 
     /**
