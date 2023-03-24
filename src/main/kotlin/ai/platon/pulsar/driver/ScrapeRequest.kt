@@ -8,4 +8,5 @@ data class ScrapeRequest(
     var sql: String,
     var priority: String = "HIGHER2",
     var asap: Boolean = false,
+    var reportUrl: String
 )

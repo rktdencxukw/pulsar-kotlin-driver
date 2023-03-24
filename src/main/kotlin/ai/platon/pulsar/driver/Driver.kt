@@ -1,15 +1,15 @@
 package ai.platon.pulsar.driver
 
+import ai.platon.pulsar.driver.pojo.WaitReportTask
+import ai.platon.pulsar.driver.report.ReportService
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.lang.reflect.Type
 import java.net.URI
-import java.net.URLEncoder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.nio.charset.Charset
 import java.time.Duration
 import java.time.OffsetDateTime
 
@@ -19,11 +19,12 @@ import java.time.OffsetDateTime
 class Driver(
     private val server: String,
     private val authToken: String,
+    private val reportUrl: String = "http://127.0.0.1:8181/report/task_update",
     private val httpTimeout: Duration = Duration.ofMinutes(3),
 ) : AutoCloseable {
     var timeout = Duration.ofSeconds(120)
-    private val scrapeBaseUri = "http://$server:8182/api/x/a"
-    private val scrapeApi = "$scrapeBaseUri/q"
+    private val scrapeBaseUri = "http://$server:8182/api/x"
+    private val scrapeJsonApi = "$scrapeBaseUri/e_json_async"
     private val statusApi = "$scrapeBaseUri/status"
     private val statusesApi = "$scrapeBaseUri/statuses"
 
@@ -36,11 +37,16 @@ class Driver(
 
     private val httpClient = HttpClient.newHttpClient()
 
+    // inject ReportService bean
+    private val reportService = ReportService.instance
+
     /**
      * Submit an SQL to scrape
      * */
     @Throws(ScrapeException::class)
     fun submit(sql: String, priority: Int = 2, asap: Boolean = false) = submitTask(sql, priority, asap)
+    @Throws(ScrapeException::class)
+    fun submitWithProcess(sql: String, onProcess: (String) -> UInt) = submitTask(sql, 2, false, onProcess)
 
     /**
      * Submit SQLs to scrape
@@ -145,7 +151,12 @@ class Driver(
     }
 
     @Throws(ScrapeException::class, IOException::class, InterruptedException::class)
-    private fun submitTask(sql: String, priority: Int, asap: Boolean = false): String {
+    private fun submitTask(
+        sql: String,
+        priority: Int,
+        asap: Boolean = false,
+        onProcess: ((String) -> UInt)? = null
+    ): String {
         val priorityName = when (priority) {
             3 -> "HIGHER3"
             2 -> "HIGHER2"
@@ -156,24 +167,29 @@ class Driver(
             -3 -> "LOWER3"
             else -> "LOWER3"
         }
-        val requestEntity = ScrapeRequest(authToken, sql, priorityName, asap = asap)
-        val request = post(scrapeApi, requestEntity)
+        val requestEntity = ScrapeRequest(authToken, sql, priorityName, asap = asap, reportUrl)
+        val request = post(scrapeJsonApi, requestEntity)
+//        val request = postString(scrapeApi, sql)
 
         val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
         val body = response.body()
         if (response.statusCode() != 200) {
             /**
              * {
-                "timestamp" : "2021-08-28T17:12:33.567+00:00",
-                "status" : 401,
-                "error" : "Unauthorized",
-                "message" : "",
-                "path" : "/api/x/a/q"
-                }
+            "timestamp" : "2021-08-28T17:12:33.567+00:00",
+            "status" : 401,
+            "error" : "Unauthorized",
+            "message" : "",
+            "path" : "/api/x/a/q"
+            }
              * */
             // println(response.body())
             val info = createGson().fromJson(body, ExceptionInfo::class.java)
             throw ScrapeException(info)
+        }
+
+        if (onProcess != null) {
+            reportService.appendTask(body, WaitReportTask(body, sql, onProcess))
         }
 
         return body
@@ -186,6 +202,14 @@ class Driver(
             .timeout(Duration.ofMinutes(3))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+            .build()
+    }
+    private fun postString(url: String, requestEntity: String): HttpRequest {
+        return HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .timeout(Duration.ofMinutes(3))
+            .header("Content-Type", "text/plain")
+            .POST(HttpRequest.BodyPublishers.ofString(requestEntity))
             .build()
     }
 }
