@@ -13,8 +13,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.13</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <groupId>ai.platon.pulsar</groupId>
-    <artifactId>pulsar-kotlin-driver_kc</artifactId>
+    <artifactId>pulsar-kotlin-driver_kc_examples</artifactId>
     <version>1.7.1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
@@ -82,9 +89,10 @@
     </repositories>
 
     <build>
+        <finalName>${project.artifactId}-${project.version}-executable-examples</finalName>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
-        <defaultGoal>install</defaultGoal>
+        <defaultGoal>package</defaultGoal>
         <plugins>
             <!--  kotlin  -->
             <plugin>
@@ -113,26 +121,107 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 <!--            <plugin>-->
 <!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <source>11</source>-->
-<!--                    <target>11</target>-->
-<!--                </configuration>-->
+<!--                <artifactId>maven-shade-plugin</artifactId>-->
+<!--                <version>3.2.4</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>shade</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <transformers>-->
+<!--                                <transformer-->
+<!--                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+<!--                                    <mainClass>ai.platon.pulsar.examples.ScrapeKt</mainClass>-->
+<!--                                </transformer>-->
+<!--                            </transformers>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
 <!--            </plugin>-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <mainClass>ai.platon.pulsar.examples.ScrapeKt</mainClass>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>repackage</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+            <!-- test main-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.springframework.boot</groupId>-->
+            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--                <version>${spring-boot.version}</version>-->
+            <!--                <configuration>-->
+            <!--                    <mainClass>ai.platon.pulsar.examples.ScrapeKt</mainClass>-->
+            <!--                    <executable>true</executable>-->
+            <!--                    <layout>ZIP</layout>-->
+            <!--                    <includes>-->
+            <!--                        <include>-->
+            <!--                            <groupId>nothing</groupId>-->
+            <!--                            <artifactId>nothing</artifactId>-->
+            <!--                        </include>-->
+            <!--                        &lt;!&ndash;                        <include>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                            <groupId>ai.platon.pulsar</groupId>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                            <artifactId>pulsar-beans</artifactId>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                        </include>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                        <include>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                            <groupId>ai.platon.scent</groupId>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                            <artifactId>scent-beans</artifactId>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                        </include>&ndash;&gt;-->
+            <!--                    </includes>-->
+            <!--                    &lt;!&ndash; 放在 includes nothing 之后&ndash;&gt;-->
+            <!--                    <addResources>true</addResources>-->
+            <!--                </configuration>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>test-compile</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>repackage</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+            <!--            &lt;!&ndash; 依赖处理插件 &ndash;&gt;-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-dependency-plugin</artifactId>-->
+            <!--                <version>2.8</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>copy</id>-->
+            <!--                        &lt;!&ndash;                        <phase>package</phase>&ndash;&gt;-->
+            <!--                        <phase>test-compile</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>copy-dependencies</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <outputDirectory>${project.build.directory}/lib</outputDirectory>-->
+            <!--                            <includeScope>compile</includeScope>-->
+            <!--                            <includeScope>runtime</includeScope>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 
@@ -291,9 +380,13 @@
             <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.12.4</version>
         </dependency>
     </dependencies>
 

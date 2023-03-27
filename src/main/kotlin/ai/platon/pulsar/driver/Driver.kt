@@ -2,6 +2,7 @@ package ai.platon.pulsar.driver
 
 import ai.platon.pulsar.driver.pojo.WaitReportTask
 import ai.platon.pulsar.driver.report.ReportService
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
@@ -19,7 +20,7 @@ import java.time.OffsetDateTime
 class Driver(
     private val server: String,
     private val authToken: String,
-    private val reportUrl: String = "http://127.0.0.1:8181/report/task_update",
+    private val reportServer: String = "",
     private val httpTimeout: Duration = Duration.ofMinutes(3),
 ) : AutoCloseable {
     var timeout = Duration.ofSeconds(120)
@@ -37,7 +38,6 @@ class Driver(
 
     private val httpClient = HttpClient.newHttpClient()
 
-    // inject ReportService bean
     private val reportService = ReportService.instance
 
     /**
@@ -46,7 +46,7 @@ class Driver(
     @Throws(ScrapeException::class)
     fun submit(sql: String, priority: Int = 2, asap: Boolean = false) = submitTask(sql, priority, asap)
     @Throws(ScrapeException::class)
-    fun submitWithProcess(sql: String, onProcess: (String) -> UInt) = submitTask(sql, 2, false, onProcess)
+    fun submitWithProcess(sql: String, onProcess: (ScrapeResponse) -> UInt) = submitTask(sql, 2, false, onProcess)
 
     /**
      * Submit SQLs to scrape
@@ -155,7 +155,7 @@ class Driver(
         sql: String,
         priority: Int,
         asap: Boolean = false,
-        onProcess: ((String) -> UInt)? = null
+        onProcess: ((ScrapeResponse) -> UInt)? = null
     ): String {
         val priorityName = when (priority) {
             3 -> "HIGHER3"
@@ -167,7 +167,7 @@ class Driver(
             -3 -> "LOWER3"
             else -> "LOWER3"
         }
-        val requestEntity = ScrapeRequest(authToken, sql, priorityName, asap = asap, reportUrl)
+        val requestEntity = ScrapeRequest(authToken, sql, priorityName, asap = asap, "$reportServer/report/task_update")
         val request = post(scrapeJsonApi, requestEntity)
 //        val request = postString(scrapeApi, sql)
 
@@ -186,13 +186,20 @@ class Driver(
             // println(response.body())
             val info = createGson().fromJson(body, ExceptionInfo::class.java)
             throw ScrapeException(info)
+        } else {
+//            val scrapeResponse = createGson().fromJson(body, ScrapeRequestSubmitResponse::class.java)
+            val scrapeResponse = ObjectMapper().readValue(body, ScrapeRequestSubmitResponseTemp::class.java)
+            val serverTaskId = scrapeResponse.uuid!!
+            if (scrapeResponse.code == 0) {
+                if (onProcess != null) {
+                    reportService.appendTask(serverTaskId, WaitReportTask(serverTaskId, sql, onProcess))
+                    return serverTaskId
+                }
+            } else {
+                println("submitTask failed: $body")
+            }
         }
-
-        if (onProcess != null) {
-            reportService.appendTask(body, WaitReportTask(body, sql, onProcess))
-        }
-
-        return body
+        return ""
     }
 
     private fun post(url: String, requestEntity: Any): HttpRequest {
@@ -212,4 +219,15 @@ class Driver(
             .POST(HttpRequest.BodyPublishers.ofString(requestEntity))
             .build()
     }
+}
+
+
+/*
+临时性。exotic中用到的scent与这里冲突了
+ */
+data class ScrapeRequestSubmitResponseTemp (
+    var uuid: String? = null,
+    var code: Int = 0,
+    var errorMessage: String = ""
+) {
 }

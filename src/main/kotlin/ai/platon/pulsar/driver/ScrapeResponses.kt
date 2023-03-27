@@ -36,7 +36,7 @@ data class ScrapeResponse(
     var estimatedWaitTime: Long = -1,
     var pageContentBytes: Int = 0,
 
-    var resultSet: List<Map<String, Any>>? = null,
+    var resultSet: List<Map<String, Any?>>? = null,
 
     var statusCode: Int = ResourceStatus.CREATED.value(),
     var pageStatusCode: Int = ResourceStatus.CREATED.value(),
