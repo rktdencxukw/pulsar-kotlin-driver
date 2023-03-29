@@ -8,6 +8,7 @@ import java.nio.file.Files
 
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.ApplicationContext
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
@@ -37,14 +39,19 @@ class IndexController {
 }
 
 
+
 @Component
-class AppStartupRunner : ApplicationRunner {
+class AppStartupRunner : ApplicationRunner
+{
+    @Autowired
+    lateinit var mongoTemplate: MongoTemplate
+
     @Throws(Exception::class)
     override fun run(args: ApplicationArguments) {
         println("Application started , with args: $args")
         if (args.containsOption("test_run")) {
             println("test option found")
-            testRun()
+            testRun(mongoTemplate)
             println("test finished")
         }
     }
@@ -61,7 +68,7 @@ fun main(args: Array<String>) {
 //    SpringApplication.run(DriverTestMain::class.java, *args)
 }
 
-fun testRun() {
+fun testRun(mongoTemplate: MongoTemplate) {
     val server = "127.0.0.1"
     val authToken = "b12yCTcfWnw0dFS767eadcea57a6ce4077348b7b3699578"
 
@@ -84,7 +91,7 @@ from
 load_and_select('{{url}} -i 1h', 'body')
 """.trimIndent()
 
-    Driver(server, authToken).use { driver ->
+    Driver(server, authToken, "", mongoTemplate ).use { driver ->
         val ids = mutableSetOf<String>()
         urls.forEach { url ->
             val sql = SQLTemplate(sqlTemplate).createSQL(url)

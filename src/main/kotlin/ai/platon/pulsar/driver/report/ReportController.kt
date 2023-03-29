@@ -1,7 +1,10 @@
 package ai.platon.pulsar.driver.report
 
 import ai.platon.pulsar.rest.api.entities.ScrapeResponse
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import javax.annotation.PostConstruct
@@ -23,9 +26,12 @@ class TaskUpdateEvent(
 )
 class ReportController(
     val applicationContext: ApplicationContext,
+    private val mongoTemplate: MongoTemplate,
 ) {
 
     private val reportService = ReportService.instance
+
+    private var logger: Logger = LoggerFactory.getLogger(ReportController::class.java)
 
     @PostConstruct
     fun init() {
@@ -38,14 +44,20 @@ class ReportController(
      * */
     @PostMapping("task_update")
     fun execute(@RequestBody scrapeResponse: ScrapeResponse): UInt {
-        println("kcdebug. Task update event: $scrapeResponse")
+        logger.debug("Task update event: $scrapeResponse")
         val waitReportTask = reportService.getTask(scrapeResponse.uuid!!)
         // TODO coroutine handle
         if (waitReportTask != null) {
-            waitReportTask.onProcess(convertResponse(scrapeResponse))
-            reportService.removeTask(scrapeResponse.uuid!!)
+            try {
+                val r = convertResponse(scrapeResponse)
+                mongoTemplate.save(r)
+                waitReportTask.onProcess(r)
+                reportService.removeTask(scrapeResponse.uuid!!)
+            } catch (e: Exception) {
+                logger.error("Error while processing task: ${scrapeResponse.uuid}. err: {}\nresponse:{}, waitReportTask:{}", e, scrapeResponse, waitReportTask)
+            }
         } else {
-            println("Task not found: ${scrapeResponse.uuid}")
+            logger.warn("Task not found: ${scrapeResponse.uuid}")
         }
 
         return 0u;
@@ -55,6 +67,7 @@ class ReportController(
         scrapeResponse: ai.platon.pulsar.rest.api.entities.ScrapeResponse,
     ): ai.platon.pulsar.driver.ScrapeResponse {
         var toResponse =  ai.platon.pulsar.driver.ScrapeResponse()
+        toResponse.id = scrapeResponse.uuid
         toResponse.pageStatusCode = scrapeResponse.pageStatusCode
         toResponse.statusCode = scrapeResponse.statusCode
         toResponse.status = scrapeResponse.status

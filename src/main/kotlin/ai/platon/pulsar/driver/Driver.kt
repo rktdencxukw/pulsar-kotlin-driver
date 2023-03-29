@@ -5,6 +5,8 @@ import ai.platon.pulsar.driver.report.ReportService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.findById
 import java.io.IOException
 import java.lang.reflect.Type
 import java.net.URI
@@ -20,7 +22,8 @@ import java.time.OffsetDateTime
 class Driver(
     private val server: String,
     private val authToken: String,
-    private val reportServer: String = "",
+    private val reportServer: String ,
+    private val mongoTemplate: MongoTemplate,
     private val httpTimeout: Duration = Duration.ofMinutes(3),
 ) : AutoCloseable {
     var timeout = Duration.ofSeconds(120)
@@ -68,12 +71,16 @@ class Driver(
     /**
      * Find a scrape response by scrape task id which returned by [submit]
      * */
-    fun findById(id: String): ScrapeResponse {
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("$statusApi?id=$id&authToken=$authToken"))
-            .timeout(httpTimeout).GET().build()
-        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-        return createGson().fromJson(httpResponse.body(), ScrapeResponse::class.java)
+//    fun findById(id: String): ScrapeResponse {
+//        val request = HttpRequest.newBuilder()
+//            .uri(URI.create("$statusApi?id=$id&authToken=$authToken"))
+//            .timeout(httpTimeout).GET().build()
+//        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+//        return createGson().fromJson(httpResponse.body(), ScrapeResponse::class.java)
+//    }
+
+    fun findById(id: String): ScrapeResponse? {
+        return mongoTemplate.findById<ScrapeResponse>(id)
     }
 
     /**
