@@ -1,10 +1,14 @@
 package ai.platon.pulsar.driver
 
 import ai.platon.pulsar.driver.pojo.WaitReportTask
+import ai.platon.pulsar.driver.report.ReportController
 import ai.platon.pulsar.driver.report.ReportService
+import ai.platon.pulsar.driver.utils.NetUtils
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.findById
 import java.io.IOException
@@ -15,6 +19,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 import java.time.OffsetDateTime
+import javax.annotation.PostConstruct
 
 /**
  * The pulsar driver
@@ -22,7 +27,7 @@ import java.time.OffsetDateTime
 class Driver(
     private val server: String,
     private val authToken: String,
-    private val reportServer: String ,
+    private val reportServer: String,
     private val mongoTemplate: MongoTemplate,
     private val httpTimeout: Duration = Duration.ofMinutes(3),
 ) : AutoCloseable {
@@ -40,16 +45,31 @@ class Driver(
     private val statusQueryApi = "$scrapeBaseUri/status/q"
 
     private val httpClient = HttpClient.newHttpClient()
+    private var logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     private val reportService = ReportService.instance
+    private lateinit var externalReportServer: String
+
+    init {
+        val externalIp = NetUtils.selfPublicIp!!
+        println("self public ip: $externalIp")
+        require(externalIp.isNotBlank()) { "Can't get self public ip" }
+        externalReportServer = "http://$externalIp:2718/exotic"
+    }
 
     /**
      * Submit an SQL to scrape
      * */
     @Throws(ScrapeException::class)
     fun submit(sql: String, priority: Int = 2, asap: Boolean = false) = submitTask(sql, priority, asap)
+
+    /**
+     * Submit an SQL to scrape
+     * scrapeServer 83.234.13.23:8081 likes
+     * */
     @Throws(ScrapeException::class)
-    fun submitWithProcess(sql: String, onProcess: (ScrapeResponse) -> UInt) = submitTask(sql, 2, false, onProcess)
+    fun submitWithProcess(sql: String, scrapeServer: String?, onProcess: (ScrapeResponse) -> UInt) =
+        submitTask(sql, 2, false, onProcess, scrapeServer)
 
     /**
      * Submit SQLs to scrape
@@ -157,12 +177,20 @@ class Driver(
     override fun close() {
     }
 
+    //    A类地址：10.0.0.0 - 10.255.255.255
+//    B类地址：172.16.0.0 - 172.31.255.255
+//    C类地址：192.168.0.0 -192.168.255.255
+    private fun isIpInternal(ip: String): Boolean {
+        return ip.startsWith("127.0.0.1") || ip.startsWith("localhost") || ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.16.");
+    }
+
     @Throws(ScrapeException::class, IOException::class, InterruptedException::class)
     private fun submitTask(
         sql: String,
         priority: Int,
         asap: Boolean = false,
-        onProcess: ((ScrapeResponse) -> UInt)? = null
+        onProcess: ((ScrapeResponse) -> UInt)? = null,
+        scrapeServer: String? = null
     ): String {
         val priorityName = when (priority) {
             3 -> "HIGHER3"
@@ -174,8 +202,22 @@ class Driver(
             -3 -> "LOWER3"
             else -> "LOWER3"
         }
-        val requestEntity = ScrapeRequest(authToken, sql, priorityName, asap = asap, "$reportServer/report/task_update")
-        val request = post(scrapeJsonApi, requestEntity)
+        var scrapeServerUri = scrapeJsonApi
+        var curReportServer = reportServer
+        if (!scrapeServer.isNullOrEmpty() && !isIpInternal(scrapeServer)) {
+            scrapeServerUri = "http://$scrapeServer/api/x/e_json_async"
+            curReportServer = externalReportServer
+        }
+        logger.debug(
+            "scrapeServerUri: {}, curReportServer: {}, scrapeServer: {}, sql: {}",
+            scrapeServerUri,
+            curReportServer,
+            scrapeServer,
+            sql
+        )
+        val requestEntity =
+            ScrapeRequest(authToken, sql, priorityName, asap = asap, "$curReportServer/report/task_update")
+        val request = post(scrapeServerUri, requestEntity)
 //        val request = postString(scrapeApi, sql)
 
         val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
@@ -218,6 +260,7 @@ class Driver(
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
     }
+
     private fun postString(url: String, requestEntity: String): HttpRequest {
         return HttpRequest.newBuilder()
             .uri(URI.create(url))
@@ -232,7 +275,7 @@ class Driver(
 /*
 临时性。exotic中用到的scent与这里冲突了
  */
-data class ScrapeRequestSubmitResponseTemp (
+data class ScrapeRequestSubmitResponseTemp(
     var uuid: String? = null,
     var code: Int = 0,
     var errorMessage: String = ""

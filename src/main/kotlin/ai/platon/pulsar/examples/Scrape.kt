@@ -96,7 +96,7 @@ load_and_select('{{url}} -i 1h', 'body')
         urls.forEach { url ->
             val sql = SQLTemplate(sqlTemplate).createSQL(url)
 //            val id = driver.submit(sql, asap = true)
-            val id = driver.submitWithProcess(sql) { println("got response in upper level $it"); 0u }
+            val id = driver.submitWithProcess(sql, null) { println("got response in upper level $it"); 0u }
             ids.add(id)
         }
         val path = Files.createTempFile("pulsar-", ".txt")

@@ -44,7 +44,7 @@ class ReportController(
      * */
     @PostMapping("task_update")
     fun execute(@RequestBody scrapeResponse: ScrapeResponse): UInt {
-        logger.debug("Task update event: $scrapeResponse")
+        logger.debug("Task update event: {}", scrapeResponse)
         val waitReportTask = reportService.getTask(scrapeResponse.uuid!!)
         // TODO coroutine handle
         if (waitReportTask != null) {
