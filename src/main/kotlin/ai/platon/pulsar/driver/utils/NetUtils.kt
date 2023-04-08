@@ -2,6 +2,8 @@ package ai.platon.pulsar.driver.utils
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.net.Inet4Address
+import java.net.NetworkInterface
 import java.net.URL
 import java.util.regex.Pattern
 
@@ -84,6 +86,24 @@ object NetUtils {
         return sb.toString()
     }
 
+    fun getInternalIps(): List<String> {
+        val ips = mutableListOf<String>()
+        val nifs = NetworkInterface.getNetworkInterfaces()
+        while (nifs.hasMoreElements()) {
+            val nif = nifs.nextElement()
+            val address = nif.inetAddresses
+            while (address.hasMoreElements()) {
+                val addr = address.nextElement()
+                if (addr is Inet4Address) {
+                    ips.add(addr.getHostAddress())
+//                    println("网卡名称：" + nif.name)
+//                    println("网络接口地址：" + addr.getHostAddress())
+                }
+            }
+        }
+        return ips
+    }
+
     /**
      * 测试
      * @param args
@@ -91,5 +111,6 @@ object NetUtils {
     @JvmStatic
     fun main(args: Array<String>) {
         println(selfPublicIp)
+        println(getInternalIps())
     }
 }

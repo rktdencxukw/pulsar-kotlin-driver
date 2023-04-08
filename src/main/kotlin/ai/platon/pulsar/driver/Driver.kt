@@ -49,14 +49,21 @@ class Driver(
 
     private val reportService = ReportService.instance
     private lateinit var externalReportServer: String
+    private lateinit var internalIps: List<String>
 
     init {
         val externalIp = NetUtils.selfPublicIp!!
         println("self public ip: $externalIp")
         require(externalIp.isNotBlank()) { "Can't get self public ip" }
         externalReportServer = "http://$externalIp:2718/exotic"
+
+        internalIps = NetUtils.getInternalIps();
+        println("self internal ips: $internalIps")
     }
 
+    private fun choiceInternalIp(ip: String): String {
+        return internalIps.random()
+    }
     /**
      * Submit an SQL to scrape
      * */
@@ -181,7 +188,9 @@ class Driver(
 //    B类地址：172.16.0.0 - 172.31.255.255
 //    C类地址：192.168.0.0 -192.168.255.255
     private fun isIpInternal(ip: String): Boolean {
-        return ip.startsWith("127.0.0.1") || ip.startsWith("localhost") || ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.16.");
+        return ip.startsWith("127.0.0.1") || ip.startsWith("localhost") || ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith(
+            "172.16."
+        );
     }
 
     @Throws(ScrapeException::class, IOException::class, InterruptedException::class)
@@ -204,9 +213,14 @@ class Driver(
         }
         var scrapeServerUri = scrapeJsonApi
         var curReportServer = reportServer
-        if (!scrapeServer.isNullOrEmpty() && !isIpInternal(scrapeServer)) {
+        if (!scrapeServer.isNullOrEmpty()) {
             scrapeServerUri = "http://$scrapeServer/api/x/e_json_async"
-            curReportServer = externalReportServer
+            if (isIpInternal(scrapeServer)) {
+                // TODO 暂时本地192.168.68开发
+                curReportServer = "http://192.168.68.137:2718/exotic"
+            } else {
+                curReportServer = externalReportServer
+            }
         }
         logger.debug(
             "scrapeServerUri: {}, curReportServer: {}, scrapeServer: {}, sql: {}",
