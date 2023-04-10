@@ -216,8 +216,8 @@ class Driver(
         if (!scrapeServer.isNullOrEmpty()) {
             scrapeServerUri = "http://$scrapeServer/api/x/e_json_async"
             if (isIpInternal(scrapeServer)) {
-                // TODO 暂时本地192.168.68开发
-                curReportServer = "http://192.168.68.137:2718/exotic"
+                // TODO 暂时exotic 启动时指定
+//                curReportServer = "http://192.168.68.137:2718/exotic"
             } else {
                 curReportServer = externalReportServer
             }
