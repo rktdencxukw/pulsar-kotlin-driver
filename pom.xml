@@ -134,13 +134,13 @@
                 </configuration>
             </plugin>
             <!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <source>11</source>-->
-<!--                    <target>11</target>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <source>11</source>-->
+            <!--                    <target>11</target>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 
@@ -311,7 +311,8 @@
     </dependencies>
 
     <properties>
-        <kotlin.version>1.5.32</kotlin.version>
+        <!--        <kotlin.version>1.5.32</kotlin.version>-->
+        <kotlin.version>1.8.0</kotlin.version>
         <dokka.version>1.4.32</dokka.version>
         <javac.src.version>11</javac.src.version>
         <javac.target.version>11</javac.target.version>

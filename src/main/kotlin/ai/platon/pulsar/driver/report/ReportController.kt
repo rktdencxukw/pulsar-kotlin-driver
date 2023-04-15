@@ -1,5 +1,6 @@
 package ai.platon.pulsar.driver.report
 
+import ai.platon.pulsar.driver.utils.ResponseUtils
 import ai.platon.pulsar.rest.api.entities.ScrapeResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -49,7 +50,7 @@ class ReportController(
         // TODO coroutine handle
         if (waitReportTask != null) {
             try {
-                val r = convertResponse(scrapeResponse)
+                val r = ResponseUtils.convertResponse(scrapeResponse)
                 mongoTemplate.save(r)
                 waitReportTask.onProcess(r)
                 reportService.removeTask(scrapeResponse.uuid!!)
@@ -63,18 +64,5 @@ class ReportController(
         return 0u;
     }
 
-    private fun convertResponse(
-        scrapeResponse: ai.platon.pulsar.rest.api.entities.ScrapeResponse,
-    ): ai.platon.pulsar.driver.ScrapeResponse {
-        var toResponse =  ai.platon.pulsar.driver.ScrapeResponse()
-        toResponse.id = scrapeResponse.uuid
-        toResponse.pageStatusCode = scrapeResponse.pageStatusCode
-        toResponse.statusCode = scrapeResponse.statusCode
-        toResponse.status = scrapeResponse.status
-        toResponse.isDone =  scrapeResponse.isDone
-        toResponse.pageContentBytes =  scrapeResponse.pageContentBytes
-        toResponse.resultSet =  scrapeResponse.resultSet
-        return toResponse
-    }
 
 }

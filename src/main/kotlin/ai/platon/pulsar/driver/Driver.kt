@@ -1,9 +1,9 @@
 package ai.platon.pulsar.driver
 
 import ai.platon.pulsar.driver.pojo.WaitReportTask
-import ai.platon.pulsar.driver.report.ReportController
 import ai.platon.pulsar.driver.report.ReportService
 import ai.platon.pulsar.driver.utils.NetUtils
+import ai.platon.pulsar.driver.utils.ResponseUtils
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
@@ -19,7 +19,6 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 import java.time.OffsetDateTime
-import javax.annotation.PostConstruct
 
 /**
  * The pulsar driver
@@ -35,6 +34,7 @@ class Driver(
     private val scrapeBaseUri = "http://$server:8182/api/x"
     private val scrapeJsonApi = "$scrapeBaseUri/e_json_async"
     private val statusApi = "$scrapeBaseUri/status"
+    private val cleanUri = "$scrapeBaseUri/clean"
     private val statusesApi = "$scrapeBaseUri/statuses"
 
     private val userBaseUri = "http://$server:8182/api/users/$authToken"
@@ -98,13 +98,20 @@ class Driver(
     /**
      * Find a scrape response by scrape task id which returned by [submit]
      * */
-//    fun findById(id: String): ScrapeResponse {
-//        val request = HttpRequest.newBuilder()
-//            .uri(URI.create("$statusApi?id=$id&authToken=$authToken"))
-//            .timeout(httpTimeout).GET().build()
-//        val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-//        return createGson().fromJson(httpResponse.body(), ScrapeResponse::class.java)
-//    }
+    fun getScrapeResponseByUUID(uuid: String): ScrapeResponse? {
+        return try {
+            val request = HttpRequest.newBuilder()
+                .uri(URI.create("$statusApi?uuid=$uuid&authToken=$authToken"))
+                .timeout(httpTimeout).GET().build()
+            val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+            val scrapeResponse = ObjectMapper().readValue(httpResponse.body(), ai.platon.pulsar.rest.api.entities.ScrapeResponse::class.java)
+            ResponseUtils.convertResponse(scrapeResponse)
+        }catch (e: IOException) {
+            logger.warn("getScrapeResponseByUUID failed: $e")
+            null
+        }
+    }
 
     fun findById(id: String): ScrapeResponse? {
         return mongoTemplate.findById<ScrapeResponse>(id)
@@ -255,7 +262,7 @@ class Driver(
             val serverTaskId = scrapeResponse.uuid!!
             if (scrapeResponse.code == 0) {
                 if (onProcess != null) {
-                    reportService.appendTask(serverTaskId, WaitReportTask(serverTaskId, sql, onProcess))
+                    reportService.appendTask(serverTaskId, WaitReportTask(cleanUri, serverTaskId, sql, onProcess))
                     return serverTaskId
                 }
             } else {
