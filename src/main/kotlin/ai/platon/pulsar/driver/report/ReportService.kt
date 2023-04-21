@@ -40,7 +40,6 @@ class ReportService {
         return tasks[serverTaskId]
     }
 
-    // 转为单例
     companion object {
         @JvmStatic // 要加这个才是
         val instance = ReportService()

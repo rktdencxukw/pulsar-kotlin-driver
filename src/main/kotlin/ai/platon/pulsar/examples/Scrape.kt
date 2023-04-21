@@ -18,6 +18,7 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.context.ApplicationContext
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.MediaType
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
@@ -91,13 +92,15 @@ from
 load_and_select('{{url}} -i 1h', 'body')
 """.trimIndent()
 
-    Driver(server, authToken, "", mongoTemplate ).use { driver ->
+    val simpMessagingTemplate = SimpMessagingTemplate(null)
+    TODO("not implement")
+    Driver(server, authToken, "", mongoTemplate, simpMessagingTemplate ).use { driver ->
         val ids = mutableSetOf<String>()
         urls.forEach { url ->
             val sql = SQLTemplate(sqlTemplate).createSQL(url)
 //            val id = driver.submit(sql, asap = true)
             val id = driver.submitWithProcess(sql, null) { println("got response in upper level $it"); 0u }
-            ids.add(id)
+//            ids.add(id)
         }
         val path = Files.createTempFile("pulsar-", ".txt")
         Files.write(path, ids)

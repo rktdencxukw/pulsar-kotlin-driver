@@ -1,9 +1,13 @@
 package ai.platon.pulsar.driver
 
+import ai.platon.pulsar.common.websocket.Command
 import ai.platon.pulsar.driver.pojo.WaitReportTask
+import ai.platon.pulsar.driver.pojo.WaitSubmitResponseTask
 import ai.platon.pulsar.driver.report.ReportService
+import ai.platon.pulsar.driver.scrape_node.services.ScrapeNodeService
 import ai.platon.pulsar.driver.utils.NetUtils
 import ai.platon.pulsar.driver.utils.ResponseUtils
+import ai.platon.pulsar.persist.metadata.IpType
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
@@ -11,6 +15,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.findById
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import java.io.IOException
 import java.lang.reflect.Type
 import java.net.URI
@@ -19,6 +24,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 import java.time.OffsetDateTime
+import java.util.Date
 
 /**
  * The pulsar driver
@@ -28,6 +34,7 @@ class Driver(
     private val authToken: String,
     private val reportServer: String,
     private val mongoTemplate: MongoTemplate,
+    private val simpMessagingTemplate: SimpMessagingTemplate,
     private val httpTimeout: Duration = Duration.ofMinutes(3),
 ) : AutoCloseable {
     var timeout = Duration.ofSeconds(120)
@@ -50,6 +57,7 @@ class Driver(
     private val reportService = ReportService.instance
     private lateinit var externalReportServer: String
     private lateinit var internalIps: List<String>
+    private lateinit var scrapeNodeService: ScrapeNodeService
 
     init {
         val externalIp = NetUtils.selfPublicIp!!
@@ -59,11 +67,15 @@ class Driver(
 
         internalIps = NetUtils.getInternalIps();
         println("self internal ips: $internalIps")
+
+        scrapeNodeService = ScrapeNodeService.instance
+        println("scrape node service: ${scrapeNodeService!!}")
     }
 
     private fun choiceInternalIp(ip: String): String {
         return internalIps.random()
     }
+
     /**
      * Submit an SQL to scrape
      * */
@@ -105,9 +117,12 @@ class Driver(
                 .timeout(httpTimeout).GET().build()
             val httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
-            val scrapeResponse = ObjectMapper().readValue(httpResponse.body(), ai.platon.pulsar.rest.api.entities.ScrapeResponse::class.java)
+            val scrapeResponse = ObjectMapper().readValue(
+                httpResponse.body(),
+                ai.platon.pulsar.rest.api.entities.ScrapeResponse::class.java
+            )
             ResponseUtils.convertResponse(scrapeResponse)
-        }catch (e: IOException) {
+        } catch (e: IOException) {
             logger.warn("getScrapeResponseByUUID failed: $e")
             null
         }
@@ -206,8 +221,9 @@ class Driver(
         priority: Int,
         asap: Boolean = false,
         onProcess: ((ScrapeResponse) -> UInt)? = null,
-        scrapeServer: String? = null
-    ): String {
+        scrapeServer: String? = null,
+        scrapeServerIpTypeWant: IpType? = null,
+    ):String {
         val priorityName = when (priority) {
             3 -> "HIGHER3"
             2 -> "HIGHER2"
@@ -238,38 +254,74 @@ class Driver(
         )
         val requestEntity =
             ScrapeRequest(authToken, sql, priorityName, asap = asap, "$curReportServer/report/task_update")
-        val request = post(scrapeServerUri, requestEntity)
+
+        if (scrapeServerIpTypeWant == IpType.RESIDENCE) {
+            var reqId = Date().time
+            return scrapeNodeService.getNodesByIpType(IpType.RESIDENCE).firstOrNull()?.let {
+                // TODO 这里要再细化
+                var cmd = Command<ScrapeRequest>("scrape",++reqId)
+                cmd.args = listOf(requestEntity)
+                try {
+                    simpMessagingTemplate!!.convertAndSendToUser(
+                        it.wsSessionId,
+                        "/queue/command",
+                        cmd,
+                        mapOf<String, String>("oh_action" to "scrape")
+                    )
+                    val task = WaitSubmitResponseTask(cleanUri, sql, onProcess)
+                    scrapeNodeService.putWaitingSubmitResponse(cmd.reqId, task)
+                    val startTime = System.currentTimeMillis()
+                    while (System.currentTimeMillis() - startTime < 10000) {
+                        if (task.serverTaskId != null) {
+                            return task.serverTaskId!!
+                        }
+                        Thread.sleep(1000)
+                    }
+                    return ""
+                } catch (e: Exception) {
+                    logger.error("send scrape command to node error", e)
+                    return ""
+                }
+            } ?: throw ScrapeException(
+                ExceptionInfo(
+                    timestamp = Date().toString(),
+                    error = "no residence scrape server available"
+                )
+            )
+        } else {
+            val request = post(scrapeServerUri, requestEntity)
 //        val request = postString(scrapeApi, sql)
 
-        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-        val body = response.body()
-        if (response.statusCode() != 200) {
-            /**
-             * {
-            "timestamp" : "2021-08-28T17:12:33.567+00:00",
-            "status" : 401,
-            "error" : "Unauthorized",
-            "message" : "",
-            "path" : "/api/x/a/q"
-            }
-             * */
-            // println(response.body())
-            val info = createGson().fromJson(body, ExceptionInfo::class.java)
-            throw ScrapeException(info)
-        } else {
-//            val scrapeResponse = createGson().fromJson(body, ScrapeRequestSubmitResponse::class.java)
-            val scrapeResponse = ObjectMapper().readValue(body, ScrapeRequestSubmitResponseTemp::class.java)
-            val serverTaskId = scrapeResponse.uuid!!
-            if (scrapeResponse.code == 0) {
-                if (onProcess != null) {
-                    reportService.appendTask(serverTaskId, WaitReportTask(cleanUri, serverTaskId, sql, onProcess))
-                    return serverTaskId
+            val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+            val body = response.body()
+            if (response.statusCode() != 200) {
+                /**
+                 * {
+                "timestamp" : "2021-08-28T17:12:33.567+00:00",
+                "status" : 401,
+                "error" : "Unauthorized",
+                "message" : "",
+                "path" : "/api/x/a/q"
                 }
+                 * */
+                // println(response.body())
+                val info = createGson().fromJson(body, ExceptionInfo::class.java)
+                throw ScrapeException(info)
             } else {
-                println("submitTask failed: $body")
+//            val scrapeResponse = createGson().fromJson(body, ScrapeRequestSubmitResponse::class.java)
+                val scrapeResponse = ObjectMapper().readValue(body, ScrapeRequestSubmitResponseTemp::class.java)
+                val serverTaskId = scrapeResponse.uuid!!
+                if (scrapeResponse.code == 0) {
+                    if (onProcess != null) {
+                        reportService.appendTask(serverTaskId, WaitReportTask(cleanUri, serverTaskId, sql, onProcess))
+                        return serverTaskId
+                    }
+                } else {
+                    println("submitTask failed: $body")
+                }
             }
+            return ""
         }
-        return ""
     }
 
     private fun post(url: String, requestEntity: Any): HttpRequest {
