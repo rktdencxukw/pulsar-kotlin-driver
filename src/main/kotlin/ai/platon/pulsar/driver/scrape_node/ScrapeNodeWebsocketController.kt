@@ -12,7 +12,9 @@ import ai.platon.pulsar.driver.utils.ResponseUtils
 import ai.platon.pulsar.persist.metadata.FetchMode
 import ai.platon.pulsar.persist.metadata.IpType
 import ai.platon.pulsar.rest.api.entities.ScrapeResponse
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
@@ -26,13 +28,15 @@ import javax.annotation.PostConstruct
 
 
 @Controller
-class ScrapeNodeController(
+class ScrapeNodeWebsocketController(
     private val simpMessagingTemplate: SimpMessagingTemplate?,
     private val mongoTemplate: MongoTemplate,
+    private val ohObjectMapper: ObjectMapper
 ) {
     private val reportService = ReportService.instance
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private val scrapeNodeService = ScrapeNodeService.instance
+
 
     @PostConstruct
     fun init() {
@@ -55,9 +59,12 @@ class ScrapeNodeController(
         if (message.nodeId.isNullOrEmpty()) {
             scrapeNode.nodeId = UUID.randomUUID().toString()
         }
-        scrapeNode.wsSessionId = headerAccessor.sessionId!!
+        scrapeNode.online = true
+//        println("kcdebug. userName 0 : ${headerAccessor.user}")
+//        println("kcdebug. userName: ${headerAccessor.user!!.name}")
+        scrapeNode.userName = headerAccessor.user!!.name
         scrapeNodeService.put(scrapeNode.nodeId!!, scrapeNode)
-        return ExoticResponse.okWithData(scrapeNode.nodeId!!)
+        return ExoticResponse.okWithData(ohObjectMapper.writeValueAsString(scrapeNode.nodeId!!))
     }
 
     @MessageMapping("/scrape_task_submitted")

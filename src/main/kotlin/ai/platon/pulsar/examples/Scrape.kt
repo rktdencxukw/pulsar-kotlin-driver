@@ -4,6 +4,7 @@ import ai.platon.pulsar.driver.Driver
 import ai.platon.pulsar.driver.report.ReportService
 import ai.platon.pulsar.driver.report.TaskUpdateEvent
 import ai.platon.pulsar.driver.utils.SQLTemplate
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.nio.file.Files
 
 
@@ -94,12 +95,12 @@ load_and_select('{{url}} -i 1h', 'body')
 
     val simpMessagingTemplate = SimpMessagingTemplate(null)
     TODO("not implement")
-    Driver(server, authToken, "", mongoTemplate, simpMessagingTemplate ).use { driver ->
+    Driver(server, authToken, "", mongoTemplate, simpMessagingTemplate, ObjectMapper() ).use { driver ->
         val ids = mutableSetOf<String>()
         urls.forEach { url ->
             val sql = SQLTemplate(sqlTemplate).createSQL(url)
 //            val id = driver.submit(sql, asap = true)
-            val id = driver.submitWithProcess(sql, null) { println("got response in upper level $it"); 0u }
+            val id = driver.submitWithProcess(sql, null, null) { println("got response in upper level $it"); 0u }
 //            ids.add(id)
         }
         val path = Files.createTempFile("pulsar-", ".txt")

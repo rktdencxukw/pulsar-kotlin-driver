@@ -1,15 +1,9 @@
 package ai.platon.pulsar.driver.scrape_node.services
 
-import ai.platon.pulsar.common.websocket.Command
 import ai.platon.pulsar.driver.pojo.WaitSubmitResponseTask
 import ai.platon.pulsar.driver.scrape_node.entity.ScrapeNode
 import ai.platon.pulsar.persist.metadata.IpType
-import ai.platon.pulsar.rest.api.entities.ScrapeRequest
-import ai.platon.pulsar.rest.api.entities.ScrapeResponse
-import org.springframework.messaging.simp.SimpMessagingTemplate
-import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
-import javax.annotation.PostConstruct
 
 //@Service
 class ScrapeNodeService(
@@ -23,6 +17,10 @@ class ScrapeNodeService(
         } else {
             return null
         }
+    }
+
+    fun getAll(): List<ScrapeNode> {
+        return cache.values.toList()
     }
 
     fun getNodesByIpType(ipType: IpType): List<ScrapeNode> {
@@ -42,7 +40,7 @@ class ScrapeNodeService(
     }
 
     fun removeBySessionId(sessionId: String) {
-        cache.values.removeIf { it.wsSessionId == sessionId }
+        cache.values.removeIf { it.userName == sessionId }
     }
 
     fun removeWaitingSubmitResponse(reqId: Long) {

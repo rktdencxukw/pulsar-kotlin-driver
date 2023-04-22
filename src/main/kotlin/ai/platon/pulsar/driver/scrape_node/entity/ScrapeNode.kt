@@ -8,5 +8,5 @@ class ScrapeNode {
     lateinit var ipType: IpType
     lateinit var fetchModeSupport: List<FetchMode>
     var online: Boolean = false
-    lateinit var wsSessionId: String
+    lateinit var userName: String
 }

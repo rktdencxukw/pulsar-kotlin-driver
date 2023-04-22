@@ -1,6 +1,7 @@
 package ai.platon.pulsar.driver
 
 import ai.platon.pulsar.common.websocket.Command
+import ai.platon.pulsar.common.websocket.ExoticResponse
 import ai.platon.pulsar.driver.pojo.WaitReportTask
 import ai.platon.pulsar.driver.pojo.WaitSubmitResponseTask
 import ai.platon.pulsar.driver.report.ReportService
@@ -35,6 +36,7 @@ class Driver(
     private val reportServer: String,
     private val mongoTemplate: MongoTemplate,
     private val simpMessagingTemplate: SimpMessagingTemplate,
+    private val ohObjectMapper: ObjectMapper,
     private val httpTimeout: Duration = Duration.ofMinutes(3),
 ) : AutoCloseable {
     var timeout = Duration.ofSeconds(120)
@@ -87,8 +89,8 @@ class Driver(
      * scrapeServer 83.234.13.23:8081 likes
      * */
     @Throws(ScrapeException::class)
-    fun submitWithProcess(sql: String, scrapeServer: String?, onProcess: (ScrapeResponse) -> UInt) =
-        submitTask(sql, 2, false, onProcess, scrapeServer)
+    fun submitWithProcess(sql: String, scrapeServer: String?, scrapeServerIpTypeWant: IpType?, onProcess: (ScrapeResponse) -> UInt) =
+        submitTask(sql, 2, false, onProcess, scrapeServer, scrapeServerIpTypeWant)
 
     /**
      * Submit SQLs to scrape
@@ -263,9 +265,9 @@ class Driver(
                 cmd.args = listOf(requestEntity)
                 try {
                     simpMessagingTemplate!!.convertAndSendToUser(
-                        it.wsSessionId,
+                        it.userName,
                         "/queue/command",
-                        cmd,
+                        ExoticResponse.okWithData(ohObjectMapper.writeValueAsString(cmd)),
                         mapOf<String, String>("oh_action" to "scrape")
                     )
                     val task = WaitSubmitResponseTask(cleanUri, sql, onProcess)

@@ -32,7 +32,7 @@ class WebSocketEventListener(
 
     @EventListener
     fun handleWebSocketDisconnectListener(event: SessionDisconnectEvent) {
-        logger.info("Disconnect connection")
+        logger.info("Disconnect connection $event")
         val headerAccessor = StompHeaderAccessor.wrap(event.message)
         val username = headerAccessor.sessionAttributes!!["username"] as String?
         if (username != null) {
@@ -43,6 +43,7 @@ class WebSocketEventListener(
 //            messagingTemplate.convertAndSend("/topic/public", chatMessage)
         }
         val sessionId = headerAccessor.sessionId
+        logger.info("Disconnect connection $sessionId")
         scrapeNodeService.removeBySessionId(sessionId!!)
     }
 
