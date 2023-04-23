@@ -11,8 +11,11 @@ import ai.platon.pulsar.driver.report.ReportService
 import ai.platon.pulsar.driver.utils.ResponseUtils
 import ai.platon.pulsar.persist.metadata.FetchMode
 import ai.platon.pulsar.persist.metadata.IpType
+import ai.platon.pulsar.rest.api.entities.ScrapeRequestSubmitResponse
 import ai.platon.pulsar.rest.api.entities.ScrapeResponse
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -69,10 +72,16 @@ class ScrapeNodeWebsocketController(
 
     @MessageMapping("/scrape_task_submitted")
     fun scrapeTaskSubmitted(
-        @Payload submitResponse: CommandResponse<ScrapeRequestSubmitResponseTemp>,
+        @Payload msg: String,
         headerAccessor: SimpMessageHeaderAccessor,
 //        user: Principal?,
     ) {
+        println("scrape task submitted: $msg")
+//        val typeRef = TypeReference<CommandResponse<ScrapeRequestSubmitResponseTemp>>()
+//        val submitResponse = ohObjectMapper.readValue(msg, typeRef)
+//        val submitResponse = ohObjectMapper.readValue(msg, typeRef)
+        val objectMapper = ObjectMapper()
+        val submitResponse = objectMapper.readValue<CommandResponse<ScrapeRequestSubmitResponse>>(msg)
         if (submitResponse.code != 0) {
             throw Error("scrape task submitted failed: $submitResponse")
             return
@@ -90,11 +99,13 @@ class ScrapeNodeWebsocketController(
 
     @MessageMapping("/scrape_task_finished")
     fun scrapeTaskFinished(
-        @Payload scrapeResponse: ScrapeResponse,
+//        @Payload scrapeResponse: ScrapeResponse,
+        @Payload msg: String,
         headerAccessor: SimpMessageHeaderAccessor,
 //        user: Principal?,
     ) {
-        println("scrape task finished: $scrapeResponse")
+        println("scrape task finished: $msg")
+        val scrapeResponse = ohObjectMapper.readValue(msg, ScrapeResponse::class.java)
         val waitReportTask = reportService.getTask(scrapeResponse.uuid!!)
         // TODO coroutine handle
         if (waitReportTask != null) {
