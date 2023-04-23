@@ -21,17 +21,19 @@ class ReportService {
 
     fun removeTask(serverTaskId: String) {
         tasks.remove(serverTaskId)?.let {
-            try {
-                val postRequest =
-                    HttpRequest.newBuilder()
-                        .uri(URI.create("${it.cleanUri}?uuid=${it.serverTaskId}"))
-                        .timeout(Duration.ofSeconds(10))
-                        .header("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .POST(HttpRequest.BodyPublishers.ofString(""))
-                        .build()
-                httpClient.send(postRequest, HttpResponse.BodyHandlers.ofString())
-            } catch (e: Exception) {
-                e.printStackTrace()
+            if (it.viaWebsocket.not()) {
+                try {
+                    val postRequest =
+                        HttpRequest.newBuilder()
+                            .uri(URI.create("${it.cleanUri}?uuid=${it.serverTaskId}"))
+                            .timeout(Duration.ofSeconds(10))
+                            .header("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                            .POST(HttpRequest.BodyPublishers.ofString(""))
+                            .build()
+                    httpClient.send(postRequest, HttpResponse.BodyHandlers.ofString())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }

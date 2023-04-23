@@ -7,6 +7,7 @@ class WaitReportTask(
     val cleanUri: String,
     val serverTaskId: String,
     val sql: String,
-    val onProcess: (ScrapeResponse) -> UInt
+    val onProcess: (ScrapeResponse) -> UInt,
+    val viaWebsocket: Boolean = false
 ) {
 }

@@ -92,7 +92,7 @@ class ScrapeNodeWebsocketController(
 
         val serverTaskId = submitResponse.data!!.uuid!!
         if (task?.onProcess != null) {
-            reportService.appendTask(serverTaskId, WaitReportTask("", serverTaskId, task.sql, task.onProcess))
+            reportService.appendTask(serverTaskId, WaitReportTask("", serverTaskId, task.sql, task.onProcess, true))
             return
         }
     }
